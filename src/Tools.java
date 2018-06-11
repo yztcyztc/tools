@@ -20,7 +20,7 @@ public class Tools {
 		// TODO 自动生成的方法存根
 		CompareTool ct = new CompareTool();
 		GetImageName gin = new GetImageName();
-		ct.diff();
+		//ct.diff();
 		//gin.getEnv();
 		//gin.getNames();
 		//ct.clean();

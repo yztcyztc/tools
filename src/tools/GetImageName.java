@@ -20,7 +20,8 @@ public class GetImageName {
 	public JSONArray getApps(){
 		JSONArray jsonarry = null;
 		try {
-		URL url = new URL("http://172.20.26.113:8080/v2/apps/dcee/*");		
+//		URL url = new URL("http://172.20.17.4:8080/v2/apps/dcee/*");	
+		URL url = new URL("http://20.12.17.153:8080/v2/apps/dcee/*");	
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
@@ -41,19 +42,44 @@ public class GetImageName {
 	}
 	public void getNames(){
 		JSONArray jsonarry = this.getApps();
+		System.out.println("num:"+jsonarry.size());
+		StringBuffer sb = new StringBuffer();
+		String tmp = null;
 		for(int i = 0 ;i < jsonarry.size();i++){
 			String image = jsonarry.getJSONObject(i).getJSONObject("container").getJSONObject("docker").getString("image");
-			System.out.println(image.split("000/")[1]);
+			if(!image.contains("-lb")){
+				tmp = image.split("000/")[1];
+				sb.append(tmp+"\n");
+				System.out.println(tmp);
+			}
 		}
+		sb.deleteCharAt(sb.length()-1);//去掉最后一个\n
+		creatFile("D:/var", "new.txt", sb.toString());
 	}
-	
+	public void getPorts(){
+		JSONArray jsonarry = this.getApps();
+		//String port = null;
+		for(int i = 0 ;i < jsonarry.size();i++){
+			JSONObject app = jsonarry.getJSONObject(i);
+			StringBuffer sb = new StringBuffer();
+			String appName = app.getString("id").split("/")[2];
+			sb.append(appName+":");
+			JSONArray ports = app.getJSONObject("container").getJSONObject("docker").getJSONArray("portMappings");
+			for(int j = 0;j<ports.size();j++){
+				String port = ports.getJSONObject(j).getString("servicePort");
+				sb.append("--"+port);
+			}
+			System.out.println(sb.toString());
+		}
+		
+	}
 	public void getEnv(){
 		JSONArray jsonarry = this.getApps();
 		//System.out.println(jsonarry.getJSONObject(0).getJSONObject("env"));
 		for(int i = 0 ;i < jsonarry.size();i++){
 			JSONObject app = jsonarry.getJSONObject(i);
 			JSONObject envs = app.getJSONObject("env");
-			Iterator it = envs.keys();
+			Iterator<?> it = envs.keys();
 			String appName = app.getString("id").split("/")[2];
 			
 			//System.out.println("----------"+app.getString("id").split("/")[2]+"-------------");
@@ -65,9 +91,26 @@ public class GetImageName {
 				sb = sb.append(key+"="+envs.getString(key)+'\n');
 				//System.out.println(sb.toString());
 			}
+			creatFile("D:/envs",appName+".txt", sb.toString().replaceAll("172.20.17.4", "192.168.33.101"));
+		}
+	}
+	
+	public void getConfig(){
+		JSONArray jsonarry = this.getApps();
+		//System.out.println(jsonarry.getJSONObject(0).getJSONObject("env"));
+		for(int i = 0 ;i < jsonarry.size();i++){
+			JSONObject app = jsonarry.getJSONObject(i);
+			JSONObject envs = app.getJSONObject("env");
+			Iterator it = envs.keys();
+			String appName = app.getString("id").split("/")[2];
+			
+			//System.out.println("----------"+app.getString("id").split("/")[2]+"-------------");
+			StringBuffer sb = new StringBuffer();
+			sb.append(app.toString());
 			creatFile("D:/envs",appName+".txt", sb.toString().replaceAll("172.20.26.113", "192.168.33.101"));
 		}
 	}
+	
 	public void creatFile(String path,String name,String data){
 		File file = new File(path,name);
 		try {		

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class CompareTool {
 	
-	File file1 = new File("D:/var/list.txt");
-	File file2 = new File("D:/var/list2.txt");
+	File file1 = new File("D:/var/new.txt");
+	File file2 = new File("D:/var/old.txt");
 	
 	Long filelength = file1.length();
 	String encode = "UTF-8";
@@ -36,15 +36,17 @@ public class CompareTool {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		System.out.println("length1:--"+list1.size());
-		System.out.println("length2:--"+list2.size());
+		System.out.println("length-new:--"+list1.size());
+		System.out.println("length-old:--"+list2.size());
+		System.out.println("list-old:");
 		for(String a:list2){
 			if(list1.contains(a)){
 				list1.remove(a);
 			}else{
-				System.out.println("list2-left:"+a);
+				System.out.println(a);
 			}
 		}
+		System.out.println("list-new:");
 		System.out.println("length-left:--"+list1.size());
 		for(String a:list1){
 			System.out.println(a);

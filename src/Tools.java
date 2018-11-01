@@ -2,6 +2,7 @@
  * 
  */
 import java.io.IOException;
+import java.util.Date;
 
 import tools.*;
 /**
@@ -20,9 +21,12 @@ public class Tools {
 		// TODO 自动生成的方法存根
 		CompareTool ct = new CompareTool();
 		GetImageName gin = new GetImageName();
-		//ct.diff();
+		System.out.println(new Date());
+		gin.getNames();
+		ct.diff();
 		//gin.getEnv();
-		//gin.getNames();
+		//gin.getPorts();
+		//gin.getConfig();
 		//ct.clean();
 //		String names[] = tool.getNames("alphine  alpine  app-manage  auth_server  openresty  tomcat  tomcat-conf-down  tomcat-docker  tomcat-test");
 		//tool.getTags(names);
